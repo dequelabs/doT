@@ -13,6 +13,9 @@
   "bin": {
     "dottojs": "./bin/dot-packer"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "homepage": "http://github.com/dequelabs/doT",
   "repository": "git://github.com/dequelabs/doT.git",
   "author": "Laura Doktorova <ldoktorova@gmail.com>",
