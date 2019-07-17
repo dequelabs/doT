@@ -1,5 +1,5 @@
 {
-  "name": "dot",
+  "name": "@deque/dot",
   "description": "Concise and fast javascript templating compatible with nodejs and other javascript environments",
   "keywords": [
     "template",
@@ -7,14 +7,14 @@
     "simple",
     "templating"
   ],
-  "version": "1.1.2",
+  "version": "1.1.3",
   "main": "doT.js",
   "browser": "doT.js",
   "bin": {
     "dottojs": "./bin/dot-packer"
   },
-  "homepage": "http://github.com/olado/doT",
-  "repository": "git://github.com/olado/doT.git",
+  "homepage": "http://github.com/dequelabs/doT",
+  "repository": "git://github.com/dequelabs/doT.git",
   "author": "Laura Doktorova <ldoktorova@gmail.com>",
   "engines": [
     "node >=0.2.6"
@@ -25,7 +25,8 @@
     "test-cov": "nyc mocha test/*.test.js",
     "test": "npm run eslint && npm run test-cov",
     "bundle": "uglifyjs doT.js -o doT.min.js -c -m --preamble '/* Laura Doktorova https://github.com/olado/doT */'",
-    "prepublish": "npm run bundle"
+    "prepublish": "npm run bundle",
+    "release": "standard-version -a"
   },
   "dependencies": {},
   "devDependencies": {
@@ -38,6 +39,7 @@
     "mocha": "*",
     "nyc": "^8.3.2",
     "pre-commit": "^1.1.3",
+    "standard-version": "^6.0.1",
     "uglify-js": "*"
   },
   "nyc": {
