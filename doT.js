@@ -1,3 +1,5 @@
+/* globals __magic__, globalThis */
+
 // doT.js
 // 2011-2014, Laura Doktorova, https://github.com/olado/doT
 // Licensed under the MIT license.
@@ -27,7 +29,21 @@
 		template: undefined, //fn, compile template
 		compile:  undefined, //fn, for express
 		log: true
-	}, _globals;
+	};
+
+	// a globalThis polyfill (used to replace the eval pattern of returning the this object)
+	// @see https://mathiasbynens.be/notes/globalthis
+	(function() {
+		if (typeof globalThis === 'object') return;
+		Object.defineProperty(Object.prototype, '__magic__', {
+			get: function() {
+				return this;
+			},
+			configurable: true // This makes it possible to `delete` the getter later.
+		});
+		__magic__.globalThis = __magic__; // lolwat
+		delete Object.prototype.__magic__;
+	}());
 
 	doT.encodeHTMLSource = function(doNotSkipEncoded) {
 		var encodeHTMLRules = { "&": "&#38;", "<": "&#60;", ">": "&#62;", '"': "&#34;", "'": "&#39;", "/": "&#47;" },
@@ -37,15 +53,13 @@
 		};
 	};
 
-	_globals = (function(){ return this || (0,eval)("this"); }());
-
 	/* istanbul ignore else */
 	if (typeof module !== "undefined" && module.exports) {
 		module.exports = doT;
 	} else if (typeof define === "function" && define.amd) {
 		define(function(){return doT;});
 	} else {
-		_globals.doT = doT;
+		globalThis.doT = doT;
 	}
 
 	var startend = {
@@ -124,7 +138,7 @@
 			//.replace(/(\s|;|\}|^|\{)out\+=''\+/g,'$1out+=');
 
 		if (needhtmlencode) {
-			if (!c.selfcontained && _globals && !_globals._encodeHTML) _globals._encodeHTML = doT.encodeHTMLSource(c.doNotSkipEncoded);
+			if (!c.selfcontained && globalThis && !globalThis._encodeHTML) globalThis._encodeHTML = doT.encodeHTMLSource(c.doNotSkipEncoded);
 			str = "var encodeHTML = typeof _encodeHTML !== 'undefined' ? _encodeHTML : ("
 				+ doT.encodeHTMLSource.toString() + "(" + (c.doNotSkipEncoded || '') + "));"
 				+ str;
