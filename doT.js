@@ -1,4 +1,4 @@
-/* globals __magic__, globalThis */
+/* globals __magic__, globalThis, window, self, global */
 
 // doT.js
 // 2011-2014, Laura Doktorova, https://github.com/olado/doT
@@ -35,14 +35,27 @@
 	// @see https://mathiasbynens.be/notes/globalthis
 	(function() {
 		if (typeof globalThis === 'object') return;
-		Object.defineProperty(Object.prototype, '__magic__', {
-			get: function() {
-				return this;
-			},
-			configurable: true // This makes it possible to `delete` the getter later.
-		});
-		__magic__.globalThis = __magic__; // lolwat
-		delete Object.prototype.__magic__;
+
+		try {
+			Object.defineProperty(Object.prototype, '__magic__', {
+				get: function() {
+					return this;
+				},
+				configurable: true // This makes it possible to `delete` the getter later.
+			});
+			__magic__.globalThis = __magic__; // lolwat
+			delete Object.prototype.__magic__;
+		} catch (e) {
+			// the polyfill doesn't work in safari 11, so we need to add a fallback to handle that
+			// @see https://github.com/dequelabs/axe-core/issues/1764
+			window.globalThis = (function() {
+				if (typeof self !== 'undefined') return self;
+				if (typeof window !== 'undefined') return window;
+				if (typeof global !== 'undefined') return global;
+				if (typeof this !== 'undefined') return this;
+				throw new Error('Unable to locate global `this`');
+			})();
+		}
 	}());
 
 	doT.encodeHTMLSource = function(doNotSkipEncoded) {
