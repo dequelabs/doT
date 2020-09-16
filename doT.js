@@ -1,4 +1,4 @@
-/* globals __magic__, globalThis, window, self, global */
+/* globals __magic__, globalThis, window, self */
 
 // doT.js
 // 2011-2014, Laura Doktorova, https://github.com/olado/doT
